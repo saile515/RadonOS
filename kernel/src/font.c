@@ -29,10 +29,11 @@ glyph_t *font_glyphs =
     (glyph_t *)(&_binary_consolefont_psf_start + sizeof(psf_font_t));
 
 void draw_glyph(const glyph_t *glyph, unsigned int x, unsigned int y) {
-  for (uint8_t row_index = 0; row_index < glyph_height; row_index++) {
+  for (unsigned int row_index = 0; row_index < glyph_height; row_index++) {
     uint8_t row = (*glyph)[row_index];
 
-    for (uint8_t column_index = 0; column_index < glyph_width; column_index++) {
+    for (unsigned int column_index = 0; column_index < glyph_width;
+         column_index++) {
       if (!(row >> (glyph_width - column_index) & 1)) {
         continue;
       }

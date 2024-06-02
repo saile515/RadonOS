@@ -1,3 +1,5 @@
+MODULES := kernel
+
 BUILD_DIR := $(shell pwd)/build
 OBJECT_DIR := $(BUILD_DIR)/objects
 C_FLAGS := -std=gnu99 -ffreestanding -O2 -Wall -Wextra
@@ -7,7 +9,6 @@ LINKER := i686-elf-ld
 
 export BUILD_DIR OBJECT_DIR C_FLAGS C_COMPILER ASSEMBLER LINKER
 
-$(shell rm -r $(BUILD_DIR))
 $(shell mkdir -p $(BUILD_DIR))
 $(shell mkdir -p $(OBJECT_DIR))
 
@@ -20,8 +21,10 @@ $(BUILD_DIR)/radonos.iso: $(BUILD_DIR)/radonos.bin
 $(BUILD_DIR)/radonos.bin: $(OBJECT_DIR)/kernel.o
 	$(C_COMPILER) -T linker.ld -o $@ -ffreestanding -O2 -nostdlib -lgcc $^
 
-$(OBJECT_DIR)/kernel.o:
-	make -C kernel
+$(MODULES:%=$(OBJECT_DIR)/%.o):
+	make -C $(basename $(notdir $@))
 
 #libc.o:
 #	make -C libc
+
+.PHONY: $(MODULES:%=$(OBJECT_DIR)/%.o)

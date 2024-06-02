@@ -14,6 +14,9 @@ void kernel_main(multiboot_info_t *multiboot_info, uint32_t magic) {
                    multiboot_info->framebuffer_height);
 
   terminal_init(framebuffer_width / 8, framebuffer_height / 16);
-  terminal_write("Welcome to RadonOS!");
+
+  terminal_write("Welcome to RadonOS!\n");
+  terminal_write("Newlines work");
+
   terminal_render();
 }
