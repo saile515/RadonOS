@@ -1,4 +1,4 @@
-MODULES := kernel
+MODULES := kernel libc
 
 BUILD_DIR := $(shell pwd)/build
 OBJECT_DIR := $(BUILD_DIR)/objects
@@ -18,13 +18,13 @@ $(BUILD_DIR)/radonos.iso: $(BUILD_DIR)/radonos.bin
 	cp grub.cfg $(BUILD_DIR)/iso/boot/grub
 	grub2-mkrescue -o $(BUILD_DIR)/radonos.iso $(BUILD_DIR)/iso
 
-$(BUILD_DIR)/radonos.bin: $(OBJECT_DIR)/kernel.o
+MODULE_OBJECTS := $(MODULES:%=$(OBJECT_DIR)/%.o)
+
+$(BUILD_DIR)/radonos.bin: $(MODULE_OBJECTS)
 	$(C_COMPILER) -T linker.ld -o $@ -ffreestanding -O2 -nostdlib -lgcc $^
 
-$(MODULES:%=$(OBJECT_DIR)/%.o):
+
+.PHONY: $(MODULE_OBJECTS)
+
+$(MODULE_OBJECTS):
 	make -C $(basename $(notdir $@))
-
-#libc.o:
-#	make -C libc
-
-.PHONY: $(MODULES:%=$(OBJECT_DIR)/%.o)

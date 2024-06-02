@@ -14,9 +14,26 @@ void kernel_main(multiboot_info_t *multiboot_info, uint32_t magic) {
                    multiboot_info->framebuffer_height);
 
   terminal_init(framebuffer_width / 8, framebuffer_height / 16);
-
   terminal_write("Welcome to RadonOS!\n");
-  terminal_write("Newlines work");
+  terminal_write(
+      "Testing really long line "
+      "............................................................."
+      "............................................................."
+      ".............................................................\n");
 
-  terminal_render();
+  int i = 1;
+  int frame = 0;
+
+  while (true) {
+    if (i % 100000000 == 0) {
+      terminal_write("Testing scrolling ");
+      terminal_write(frame % 2 == 0 ? "1\n" : "2\n");
+      terminal_render();
+
+      i = 0;
+      frame++;
+    }
+
+    i++;
+  }
 }

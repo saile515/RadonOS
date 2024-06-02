@@ -20,8 +20,5 @@ $(OBJECT_DIR)/$(MODULE_NAME).o: $(OBJECTS)
 	$(LINKER) -relocatable $^ -o $@
 
 $(C_OBJECTS): $(LOCAL_OBJECT_DIR)/%.o : $(realpath src)/%.c
-	$(info )
-	$(info $^)
-	$(info )
 	mkdir -p $(@D)
 	$(C_COMPILER) -c $^ -o $@ $(C_FLAGS) $(INCLUDE_DIRECTORIES:%=-I%)
