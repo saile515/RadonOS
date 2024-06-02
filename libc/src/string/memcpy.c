@@ -2,10 +2,11 @@
 
 #include <stdint.h>
 
-void *memcpy(void *restrict dest, const void *restrict src, size_t count) {
+void *memcpy(void *restrict destination, const void *restrict source,
+             size_t count) {
   for (size_t i = 0; i < count; i++) {
-    ((unsigned char *)dest)[i] = ((unsigned char *)src)[i];
+    ((unsigned char *)destination)[i] = ((unsigned char *)source)[i];
   }
 
-  return dest;
+  return destination;
 }

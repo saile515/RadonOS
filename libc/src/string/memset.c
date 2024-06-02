@@ -1,23 +1,60 @@
 #include "string.h"
 
-void *memset(void *dest, int ch, size_t count) {
-  size_t dword_size = sizeof(unsigned int) / sizeof(unsigned char);
-  size_t byte = 0;
+// Algorithm taken from glibc
+// (https://sourceware.org/git/?p=glibc.git;a=blob;f=string/memset.c).
 
-  // Align to dword.
-  for (; byte < (unsigned long)dest % dword_size; byte++) {
-    ((unsigned char *)dest)[byte] = (unsigned char)ch;
+void *memset(void *destination, int character, size_t count) {
+  unsigned long destination_address = (unsigned long)destination;
+
+  if (count >= 8) {
+    long repeated_character = character;
+    repeated_character |= repeated_character << 8;
+    repeated_character |= repeated_character << 16;
+
+    if (sizeof(unsigned long) > 4) {
+      repeated_character |= (repeated_character << 16) << 16;
+    }
+
+    while (destination_address % sizeof(unsigned long) != 0) {
+      ((unsigned char *)destination_address)[0] = character;
+      destination_address++;
+      count--;
+    }
+
+    unsigned int block_size = (sizeof(unsigned long) * 8);
+
+    while (count / block_size > 0) {
+      ((unsigned long *)destination_address)[0] = repeated_character;
+      ((unsigned long *)destination_address)[1] = repeated_character;
+      ((unsigned long *)destination_address)[2] = repeated_character;
+      ((unsigned long *)destination_address)[3] = repeated_character;
+      ((unsigned long *)destination_address)[4] = repeated_character;
+      ((unsigned long *)destination_address)[5] = repeated_character;
+      ((unsigned long *)destination_address)[6] = repeated_character;
+      ((unsigned long *)destination_address)[7] = repeated_character;
+
+      destination_address += block_size;
+      count -= block_size;
+    }
+
+    count %= block_size;
+
+    block_size = sizeof(unsigned long);
+
+    while (count / block_size > 0) {
+      ((unsigned long *)destination_address)[0] = repeated_character;
+      destination_address += block_size;
+      count -= block_size;
+    }
+
+    count %= block_size;
   }
 
-  // Set dword_size bytes at a time.
-  for (; byte < count; byte += dword_size) {
-    ((unsigned int *)dest)[byte / dword_size] = (unsigned int)ch;
+  while (count > 0) {
+    ((unsigned char *)destination_address)[0] = character;
+    destination_address++;
+    count--;
   }
 
-  // Set last bytes.
-  for (; byte < count; byte++) {
-    ((unsigned char *)dest)[byte] = (unsigned char)ch;
-  }
-
-  return dest;
+  return destination;
 }

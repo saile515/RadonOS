@@ -2,14 +2,14 @@
 
 #include <stddef.h>
 
-char *strchr(const char *str, int ch) {
-  while (*str != (char)ch) {
-    if (*str == '\0') {
+char *strchr(const char *string, int character) {
+  while (*string != (char)character) {
+    if (*string == '\0') {
       return NULL;
     }
 
-    str++;
+    string++;
   }
 
-  return (char *)str;
+  return (char *)string;
 }

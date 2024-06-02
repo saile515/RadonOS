@@ -1,9 +1,9 @@
 #include "string.h"
 
-void *memchr(const void *ptr, int ch, size_t count) {
+void *memchr(const void *buffer, int character, size_t count) {
   for (size_t i = 0; i < count; i++) {
-    if (((unsigned char *)ptr)[i] == (unsigned char)ch) {
-      return ((void *)ptr) + i;
+    if (((unsigned char *)buffer)[i] == (unsigned char)character) {
+      return ((void *)buffer) + i;
     }
   }
 

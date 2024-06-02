@@ -35,9 +35,10 @@ void terminal_putchar(char character) {
     const char *first_line_end =
         memchr(terminal_buffer, '\n', terminal_buffer_size) + 1;
 
-    size_t first_line_length = first_line_end == NULL
-                                   ? terminal_width
-                                   : first_line_end - terminal_buffer;
+    size_t first_line_length =
+        first_line_end == NULL
+            ? terminal_width
+            : (unsigned long)first_line_end - (unsigned long)terminal_buffer;
 
     if (first_line_length > terminal_width) {
       first_line_length = terminal_width + 1;
