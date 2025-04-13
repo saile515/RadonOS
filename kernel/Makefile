@@ -9,7 +9,7 @@ OBJECTS := $(LOCAL_OBJECT_DIR)/boot.o $(LOCAL_OBJECT_DIR)/consolefont.o
 include ../make/build_module.mk
 
 $(LOCAL_OBJECT_DIR)/boot.o: src/boot.s
-	$(ASSEMBLER) $^ -o $@
+	$(ASSEMBLER) $^ -o $@ -g
 
 $(LOCAL_OBJECT_DIR)/consolefont.o: consolefont.psf
 	objcopy -O elf32-i386 -B i386 -I binary $^ $@

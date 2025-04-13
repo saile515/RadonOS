@@ -93,6 +93,8 @@ _start:
 	preserved and the call is well defined.
 	*/
 
+  fninit
+
   push %eax
   push %ebx
 

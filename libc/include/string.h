@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+size_t strlen(const char *string);
 char *strchr(const char *string, int character);
 
 void *memchr(const void *buffer, int character, size_t count);
