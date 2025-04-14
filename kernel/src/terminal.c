@@ -2,15 +2,15 @@
 
 #include "font.h"
 #include "framebuffer.h"
+#include "string.h"
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
-#define terminal_buffer_size 10000
+// VGA size (640/8+1)*(480/16)
+#define terminal_buffer_size 2430
 
 static unsigned int terminal_width;
 static unsigned int terminal_height;
-// TODO: Make buffer size of terminal.
 static char terminal_buffer[terminal_buffer_size];
 static size_t terminal_buffer_index;
 static unsigned int terminal_column = 0;

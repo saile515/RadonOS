@@ -2,7 +2,7 @@ MODULES := kernel libc
 
 BUILD_DIR := $(shell pwd)/build
 OBJECT_DIR := $(BUILD_DIR)/objects
-C_FLAGS := -std=gnu99 -ffreestanding -Wall -Wextra -ggdb
+C_FLAGS := -std=gnu99 -ffreestanding -Wall -Wextra -ggdb -Werror
 C_COMPILER := i686-elf-gcc
 ASSEMBLER := i686-elf-as
 LINKER := i686-elf-ld

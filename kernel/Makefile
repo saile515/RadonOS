@@ -1,7 +1,7 @@
 MODULE_NAME := kernel
 
 C_SOURCES := src/kernel.c src/terminal.c src/framebuffer.c src/font.c
-INCLUDE_DIRECTORIES := ../libc/include
+INCLUDE_DIRECTORIES := ../libc/include ./include/kernel
 
 LOCAL_OBJECT_DIR := $(OBJECT_DIR)/$(MODULE_NAME)
 OBJECTS := $(LOCAL_OBJECT_DIR)/boot.o $(LOCAL_OBJECT_DIR)/consolefont.o
