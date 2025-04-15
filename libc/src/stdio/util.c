@@ -1,6 +1,7 @@
 #include "util.h"
 
 #include "math.h"
+#include <stdio.h>
 
 int format_int(FILE *stream, uint32_t number) {
     int magnitude = log10(number);
@@ -15,6 +16,29 @@ int format_int(FILE *stream, uint32_t number) {
         rest -= digit * multiplier;
 
         fputc(digit + '0', stream);
+    }
+
+    return magnitude + 1;
+}
+
+int format_hex(FILE *stream, uint32_t number) {
+    int magnitude = 0;
+
+    {
+        int number_copy = number;
+
+        while (number_copy >>= 4) {
+            number_copy &= 0x0FFFFFFF;
+            ++magnitude;
+        }
+    }
+
+    for (int i = magnitude; i >= 0; i--) {
+        char hex_digit = (number >> (i * 4)) & 0xF;
+
+        hex_digit += hex_digit > 9 ? 'a' - 10 : '0';
+
+        fputc(hex_digit, stream);
     }
 
     return magnitude + 1;

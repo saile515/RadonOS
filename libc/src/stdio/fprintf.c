@@ -33,6 +33,12 @@ int vfprintf(FILE *stream, const char *format, va_list argp) {
             ++i;
             continue;
         }
+
+        if (specifier == 'x') {
+            format_hex(stream, va_arg(argp, uint32_t));
+            ++i;
+            continue;
+        }
     }
 
     return stream->position - initial_position;
