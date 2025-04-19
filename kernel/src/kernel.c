@@ -11,8 +11,9 @@ void kernel_main(multiboot_info_t *multiboot_info, uint32_t magic) {
         return;
     }
 
-    init_physical_memory((multiboot_memory_map_t *)multiboot_info->mmap_addr,
-                         multiboot_info->mmap_length);
+    init_physical_memory(
+        (multiboot_memory_map_t *)(multiboot_info->mmap_addr + 0xC0000000),
+        multiboot_info->mmap_length);
 
     framebuffer_init((uint32_t)multiboot_info->framebuffer_addr,
                      multiboot_info->framebuffer_width,

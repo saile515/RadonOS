@@ -5,13 +5,14 @@ PTE = Page Table Entry
 
 ## Kernel
 
-PDE 1
-Kernel starts at PTE 512. Earlier entries are identity mapped and reserved for BIOS/Hardware.
-
-## Page directory
-
-PDE 1024
+PDE 768
+Kernel starts at PTE 256. Earlier entries are reserved for BIOS/Hardware.
+The entire PDE is mapped 1:1 to 0x00000000-0x00400000
 
 # Framebuffer
 
 PDE 1023
+
+## Page directory
+
+PDE 1024

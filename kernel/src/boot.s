@@ -5,7 +5,7 @@
 .set MAGIC, 0x1BADB002
 .set CHECKSUM, -(MAGIC + FLAGS)
 
-.section .multiboot
+.section .multiboot.data, "aw"
 .align   4
 .long    MAGIC
 .long    FLAGS
@@ -16,70 +16,84 @@
 .long    0
 .long    0
 
-.section .bss
-.align   16
-
+.section .bootstrap_stack, "aw", @nobits
 stack_bottom:
  .skip 16384
 
 stack_top:
 
-.align   4096
+.section .bss, "aw", @nobits
 page_directory:
   .skip 4096
 
 page_table0:
   .skip 4096
 
-.section .text
-.global  _start
-.type    _start, @function
+multiboot_info_pointer:
+  .skip 4
 
-_start:
-  // Initialize stack
-  movl $stack_top, %esp
+multiboot_magic:
+  .skip 4
+
+.section .multiboot.text, "a"
+.global _start
+.type _start, @function
+_start:  
+  // Store multiboot header
+  movl %ebx, multiboot_info_pointer - 0xC0000000
+  movl %eax, multiboot_magic - 0xC0000000
 
   // Initalize FPU
   fninit
 
-  // Push multiboot header
-  push %eax
-  push %ebx
-
-  // Identity map first 4MB
-  movl $page_table0, %eax
+  // Identity map first 4MB, and map to 0xC0000000
+  movl $(page_table0 - 0xC0000000), %eax
   orl $0x3, %eax
-  movl %eax, page_directory
+  movl %eax, page_directory - 0xC0000000
+  movl %eax, page_directory - 0xC0000000 + 0xC00
 
   movl $0x0, %eax
   movl $0x0, %ebx
-  .fill_identity_map:
+  .fill_kernel_page_table:
     movl %ebx, %ecx
     orl $0x3, %ecx
-    movl %ecx, page_table0(,%eax,4)
+    movl %ecx, (page_table0 - 0xC0000000)(,%eax,4)
     addl $0x1000, %ebx
     incl %eax
-    cmpl $0x1000, %eax
-    jne .fill_identity_map
+    cmpl $0x400, %eax
+    jne .fill_kernel_page_table
 
   // Map page directory to last page table
-  movl $page_directory, %eax
+  movl $(page_directory - 0xC0000000), %eax
   orl $0x3, %eax
-  movl %eax, page_directory + 0xFFC
+  movl %eax, page_directory - 0xC0000000 + 0xFFC
 
   // Initalize paging
-  movl $page_directory, %eax
+  movl $(page_directory - 0xC0000000), %eax
   movl %eax, %cr3
   movl %cr0, %eax
   orl $0x80000001, %eax
   movl %eax, %cr0
 
+  leal 1f, %eax
+  jmp *%eax
+
+.section .text
+1:
+  // Remove identity mapping of first page table
+  movl $0x0, page_directory
+
+  // Initialize stack
+  movl $stack_top, %esp
+  movl $stack_top, %ebp
+
+  addl $0xC0000000, multiboot_info_pointer
+  push multiboot_magic
+  push multiboot_info_pointer
+
   call kernel_main
 
   cli
-
-1:
+2:
   hlt
-  jmp 1b
-
-.size _start, . - _start
+  jmp 2b
