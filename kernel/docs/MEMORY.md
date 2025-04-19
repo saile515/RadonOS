@@ -1,18 +1,38 @@
 # RadonOS static memory mappings
 
-PDE = Page Directory Entry
-PTE = Page Table Entry
+PDE = Page Directory Entry (0 index)
+PTE = Page Table Entry (0 index)
+
+## Application
+
+### Stack
+
+PDE 0
+
+### Application program/static data
+
+PDE 1-254
+
+### Heap
+
+PDE 255-766
 
 ## Kernel
 
-PDE 768
-Kernel starts at PTE 256. Earlier entries are reserved for BIOS/Hardware.
-The entire PDE is mapped 1:1 to 0x00000000-0x00400000
+### BIOS/Bootloader/Hardware reserved
 
-# Framebuffer
+PDE 767, PTE 0-255
+Mapped to 0x00000000-0x00100000
+
+### Kernel program/static data
+
+PDE 767, PTE 256-1023
+Mapped to 0x00100000-0x00400000
+
+### Framebuffer
+
+PDE 1022
+
+### Page directory
 
 PDE 1023
-
-## Page directory
-
-PDE 1024
