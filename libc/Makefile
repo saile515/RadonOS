@@ -12,9 +12,12 @@ C_SOURCES := \
 	src/stdio/sprintf.c \
 	src/stdio/stdout.c \
 	src/stdio/util.c \
+	src/stdlib/free.c \
 	src/stdlib/malloc.c \
+	src/stdlib/memory.c \
 	src/string/memchr.c \
 	src/string/memcpy.c \
+	src/string/memmove.c \
 	src/string/memset.c \
 	src/string/strchr.c \
 	src/string/strlen.c \
