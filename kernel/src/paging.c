@@ -36,3 +36,17 @@ bool map_page(uint32_t virtual_address, uint32_t physical_address,
 
     return true;
 }
+
+uint32_t get_page_table_entry_from_address(void *address) {
+    size_t page_directory_index = (uint32_t)address >> 22;
+    size_t page_table_index = (uint32_t)address >> 12 & 0x03FF;
+
+    if (!is_page_present(page_directory[page_directory_index])) {
+        return 0x0;
+    }
+
+    uint32_t *page_table =
+        ((uint32_t *)0xFFC00000) + (0x400 * page_directory_index);
+
+    return page_table[page_table_index];
+}

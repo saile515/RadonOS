@@ -24,14 +24,17 @@ void kernel_main(multiboot_info_t *multiboot_info, uint32_t magic) {
 
     printf("Welcome to RadonOS!\n");
 
-    uint32_t pointer1 = (uint32_t)malloc(0x2000001);
-    free((void *)pointer1);
-    pointer1 = (uint32_t)malloc(0x4000001);
-    uint32_t pointer2 = (uint32_t)malloc(0x20000000);
-    uint32_t pointer3 = (uint32_t)malloc(0x2000000);
+    size_t size = 0x20;
 
-    printf("Pointer 1: %x\nPointer 2: %x\nPointer 3: %x", pointer1, pointer2,
-           pointer3);
+    uint8_t *pointer = malloc(size);
+
+    for (size_t i = 0; i < size; ++i) {
+        pointer[i] = 0x1 << (i % 8);
+    }
+
+    for (size_t i = 0; i < size; ++i) {
+        printf("pointer[%d]: %d\n", i, pointer[i]);
+    }
 
     terminal_render();
 }

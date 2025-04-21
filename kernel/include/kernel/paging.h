@@ -13,3 +13,4 @@ bool map_page(uint32_t virtual_address, uint32_t physical_address,
               unsigned int flags);
 uint32_t get_page_address(uint32_t page_table_entry);
 bool is_page_present(uint32_t page_table_entry);
+uint32_t get_page_table_entry_from_address(void *address);

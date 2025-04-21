@@ -4,6 +4,11 @@
 #include <stdio.h>
 
 int format_int(FILE *stream, uint32_t number) {
+    if (number == 0) {
+        fputc('0', stream);
+        return 1;
+    }
+
     int magnitude = log10(number);
 
     uint32_t rest = number;
